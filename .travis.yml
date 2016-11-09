@@ -24,6 +24,8 @@ addons:
   apt:
     packages:
       - oracle-java8-installer
-
+cache:
+  directories:
+     - $HOME/.m2
 #after_success:
 #  - bash <(curl -s https://codecov.io/bash) -t
