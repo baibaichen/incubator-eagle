@@ -27,7 +27,7 @@ addons:
       - oracle-java8-installer
 
 install:
-  - travis_wait 30 mvn dependency:resolve
+  - travis_wait 30 mvn dependency:resolve --quiet
   - nvm install 4
 
 script:
