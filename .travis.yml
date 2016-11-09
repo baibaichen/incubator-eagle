@@ -24,8 +24,8 @@ addons:
       - oracle-java8-installer
 
 install:
-  - mvn dependency:resolve
-  
+  - mvn dependency:resolve  --quiet
+
 node_js:
   - "4"
 script:
