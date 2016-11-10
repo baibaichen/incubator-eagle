@@ -35,6 +35,7 @@ import org.apache.eagle.alert.engine.publisher.AlertPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Objects;
 import com.typesafe.config.Config;
 
 @SuppressWarnings("rawtypes")
@@ -167,13 +168,16 @@ public class AlertPublisherImpl implements AlertPublisher {
             List<String> oldPolicies = beforeModified.get(i).getPolicyIds();
             List<String> oldStreams = beforeModified.get(i).getStreamIds();
 
-            if (!newPolicies.equals(oldPolicies) || !newStreams.equals(oldStreams)) {
+            if (!newPolicies.equals(oldPolicies) || !Objects.equal(newStreams, oldStreams)) {
                 // since both policy & stream may change, skip the compare and difference update
                 removePublihsPoliciesStreams(newPSPublishPluginMapping, oldPolicies, pubName);
                 addPublishmentPoliciesStreams(newPSPublishPluginMapping, newPolicies, newStreams, pubName);
             }
             Publishment newPub = afterModified.get(i);
-            newPublishMap.get(pubName).update(newPub.getDedupIntervalMin(), newPub.getProperties());
+
+            // for updated publishment, need to init them too
+            AlertPublishPlugin newPlugin = AlertPublishPluginsFactory.createNotificationPlugin(newPub, config, conf);
+            newPublishMap.replace(pubName, newPlugin);
         }
 
         // now do the swap
