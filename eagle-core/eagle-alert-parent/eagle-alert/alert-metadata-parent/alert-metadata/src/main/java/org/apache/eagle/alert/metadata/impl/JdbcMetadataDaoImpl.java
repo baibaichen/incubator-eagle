@@ -23,6 +23,7 @@ import org.apache.eagle.alert.coordination.model.internal.Topology;
 import org.apache.eagle.alert.engine.coordinator.*;
 import org.apache.eagle.alert.engine.model.AlertPublishEvent;
 import org.apache.eagle.alert.metadata.IMetadataDao;
+import org.apache.eagle.alert.metadata.MetadataUtils;
 import org.apache.eagle.alert.metadata.resource.Models;
 import org.apache.eagle.alert.metadata.resource.OpResult;
 import com.google.inject.Inject;
@@ -40,7 +41,7 @@ public class JdbcMetadataDaoImpl implements IMetadataDao {
 
     @Inject
     public JdbcMetadataDaoImpl(Config config) {
-        handler = new JdbcDatabaseHandler(config);
+        handler = new JdbcDatabaseHandler(config.getConfig(MetadataUtils.META_DATA));
     }
 
     @Override
@@ -75,11 +76,11 @@ public class JdbcMetadataDaoImpl implements IMetadataDao {
 
     @Override
     public List<AlertPublishEvent> listAlertPublishEvent(int size) {
-        if (size <= 0) {
-            return handler.list(AlertPublishEvent.class);
-        } else {
-            return handler.listSubset(AlertPublishEvent.class, size);
+        List<AlertPublishEvent> result = handler.list(AlertPublishEvent.class);
+        if (size < 0 || size > result.size()) {
+            size = result.size();
         }
+        return result.subList(result.size() - size, result.size());
     }
 
     @Override
@@ -88,10 +89,13 @@ public class JdbcMetadataDaoImpl implements IMetadataDao {
     }
 
     @Override
-    public List<AlertPublishEvent> getAlertPublishEventByPolicyId(String policyId) {
+    public List<AlertPublishEvent> getAlertPublishEventByPolicyId(String policyId, int size) {
         List<AlertPublishEvent> alerts = handler.list(AlertPublishEvent.class);
+        if (size < 0 || size > alerts.size()) {
+            size = alerts.size();
+        }
         List<AlertPublishEvent> result = alerts.stream().filter(alert -> alert.getPolicyId().equals(policyId)).collect(Collectors.toList());
-        return result;
+        return result.subList(result.size() - size, result.size());
     }
 
     @Override
