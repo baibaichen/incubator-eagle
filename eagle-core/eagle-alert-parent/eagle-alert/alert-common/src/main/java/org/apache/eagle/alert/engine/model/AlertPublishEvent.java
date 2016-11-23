@@ -18,9 +18,11 @@
 
 package org.apache.eagle.alert.engine.model;
 
+import com.google.common.base.Preconditions;
+import org.apache.eagle.common.DateTimeUtil;
+
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class AlertPublishEvent {
     private String alertId;
@@ -29,7 +31,7 @@ public class AlertPublishEvent {
     private String policyId;
     private String policyValue;
     private long alertTimestamp;
-    private Map<String, String> alertData;
+    private Map<String, Object> alertData;
 
     public static final String SITE_ID_KEY = "siteId";
     public static final String APP_IDS_KEY = "appIds";
@@ -84,17 +86,18 @@ public class AlertPublishEvent {
         this.policyId = policyId;
     }
 
-    public Map<String, String> getAlertData() {
+    public Map<String, Object> getAlertData() {
         return alertData;
     }
 
-    public void setAlertData(Map<String, String> alertData) {
+    public void setAlertData(Map<String, Object> alertData) {
         this.alertData = alertData;
     }
 
     public static AlertPublishEvent createAlertPublishEvent(AlertStreamEvent event) {
+        Preconditions.checkNotNull(event.getAlertId(), "alertId is not initialized before being published: " + event.toString());
         AlertPublishEvent alertEvent = new AlertPublishEvent();
-        alertEvent.setAlertId(UUID.randomUUID().toString());
+        alertEvent.setAlertId(event.getAlertId());
         alertEvent.setPolicyId(event.getPolicyId());
         alertEvent.setAlertTimestamp(event.getCreatedTime());
         if (event.getExtraData() != null && !event.getExtraData().isEmpty()) {
@@ -106,5 +109,13 @@ public class AlertPublishEvent {
         return alertEvent;
     }
 
+    public String toString() {
+        return String.format("%s %s alertId=%s, siteId=%s, policyId=%s, alertData=%s",
+            DateTimeUtil.millisecondsToHumanDateWithSeconds(alertTimestamp),
+            DateTimeUtil.CURRENT_TIME_ZONE.getID(),
+            alertId,
+            siteId,
+            policyId,
+            alertData.toString());
+    }
 }
-

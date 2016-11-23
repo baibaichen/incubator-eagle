@@ -27,10 +27,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>eagle-metadata</artifactId>
+    <name>Eagle::Core::Metadata</name>
     <packaging>pom</packaging>
     <modules>
         <module>eagle-metadata-jdbc</module>
         <module>eagle-metadata-mongo</module>
         <module>eagle-metadata-base</module>
     </modules>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <failOnViolation>true</failOnViolation>
+                    <failsOnError>true</failsOnError>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

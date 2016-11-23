@@ -27,10 +27,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>eagle-embed-parent</artifactId>
+    <name>Eagle::Core::Embed::Parent</name>
     <packaging>pom</packaging>
 
     <modules>
         <module>eagle-embed-hbase</module>
         <module>eagle-embed-server</module>
     </modules>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <failOnViolation>true</failOnViolation>
+                    <failsOnError>true</failsOnError>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

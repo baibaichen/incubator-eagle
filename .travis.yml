@@ -18,24 +18,26 @@ language: java
 jdk:
   - oraclejdk8
 
+node_js:
+  - "4"
+
 addons:
   apt:
     packages:
       - oracle-java8-installer
 
 install:
-  - mvn dependency:resolve  --quiet
+  - travis_wait 30 mvn dependency:resolve --quiet
+  - nvm install 4
 
-node_js:
-  - "4"
 script:
   - sudo rm /etc/mavenrc
-  - export MAVEN_OPTS="-Xmx2469m -XX:MaxPermSize=512m"
-  - nvm install 4
-  - mvn clean package -DskipTests=true --quiet
+  - export MAVEN_OPTS="-Xmx2469m"
+  - mvn clean test > ut.log
 
 cache:
   directories:
      - $HOME/.m2
-#after_success:
-#  - bash <(curl -s https://codecov.io/bash) -t
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -t 485ecf3a-ed8c-4585-aef5-bee6ff2d2d9b

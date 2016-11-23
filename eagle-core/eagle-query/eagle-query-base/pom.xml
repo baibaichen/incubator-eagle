@@ -28,6 +28,8 @@
 
     <artifactId>eagle-query-base</artifactId>
 
+    <name>Eagle::Core::Query::QueryBase</name>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.eagle</groupId>
@@ -43,6 +45,19 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.eagle</groupId>
+            <artifactId>eagle-embed-hbase</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.eagle</groupId>
+            <artifactId>eagle-embed-hbase</artifactId>
+            <version>${project.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
